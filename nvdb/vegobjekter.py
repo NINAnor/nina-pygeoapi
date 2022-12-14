@@ -6,21 +6,43 @@ import shapely.wkt
 import walrus
 from pygeoapi.provider.base import BaseProvider
 
+from . import URL
+
 db = walrus.Database()
 cache = db.cache()
 
+url = urljoin(URL, "/vegobjekter/")
 
-# URL = "https://nvdbapiles-v3.atlas.vegvesen.no/"
-URL = "https://nvdbapiles-v3.test.atlas.vegvesen.no/"
+mapping = str.maketrans(
+    {
+        "æ": "ae",
+        "ø": "oe",
+        "å": "aa",
+    }
+)
 
 
-class TrafikMengde(BaseProvider):
-    """NVDB - TrafikMengde"""
+def normalize(value):
+    """Change column names to [a-z][a-z0-9_]*
 
+    - General rule: make the string lowercase
+    - GRASS requires [A-Za-z][A-Za-z0-9_]*
+      https://github.com/OSGeo/grass/blob/889ed601c30bb609d73eb11a0bb3f985cff3b57d/vector/v.in.ogr/main.c#L1067
+    """
+    value = value.lower()
+    value = value.translate(mapping)
+    value = value.replace(" ", "_")
+    value = "".join(v for v in value if v in "0123456789abcdefghijklmnopqrstuvwxyz")
+    if value[0] in "0123456789":
+        value = "_" + value
+    return value
+
+
+class VegObjekter(BaseProvider):
     def __init__(self, provider_def):
-        """Inherit from parent class"""
         super().__init__(provider_def)
         self.max_items = 300  # 300 seems to be the maximum number of items per page
+        self.obj_id = self.options["obj_id"]
 
     def fix_geometry(self, y, x, z=None):
         """Drop Z and switch coordinates
@@ -32,12 +54,16 @@ class TrafikMengde(BaseProvider):
         return shapely.ops.transform(self.fix_geometry, shapely.wkt.loads(wkt))
 
     def obj2feature(self, obj):
+        if "geometri" not in obj:
+            # example: https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/452/301561867/1
+            obj["geometri"] = {"wkt": "POLYGON EMPTY"}
+
         geometry = self.wkt2geom(obj["geometri"]["wkt"])
 
         properties = {}
         for prop in obj["egenskaper"]:
-            if prop["egenskapstype"] == "Heltall":
-                properties[prop["navn"]] = prop["verdi"]
+            if "verdi" in prop:
+                properties[normalize(prop["navn"])] = prop["verdi"]
 
         return {
             "type": "Feature",
@@ -54,7 +80,7 @@ class TrafikMengde(BaseProvider):
 
     @cache.cached(timeout=60 * 60)
     def get_start(self, **params):
-        return requests.get(urljoin(URL, "vegobjekter/540"), params=params).json()[
+        return requests.get(urljoin(url, str(self.obj_id)), params=params).json()[
             "metadata"
         ]["neste"]["start"]
 
@@ -98,7 +124,7 @@ class TrafikMengde(BaseProvider):
         for antall in self.quick_pagination(limit, self.max_items):
             params["antall"] = antall
             response = requests.get(
-                urljoin(URL, "vegobjekter/540"), params=params
+                urljoin(url, f"{self.obj_id}"), params=params
             ).json()
             for obj in response["objekter"]:
                 features.append(self.obj2feature(obj))
@@ -115,7 +141,7 @@ class TrafikMengde(BaseProvider):
             "inkluder": "alle",
         }
         obj = requests.get(
-            f"https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/540/{identifier}",
+            urljoin(url, f"{self.obj_id}/{identifier}"),
             params=params,
         ).json()
         return self.obj2feature(obj)
