@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import urljoin
 
 import requests
@@ -62,8 +63,12 @@ class VegObjekter(BaseProvider):
 
         properties = {}
         for prop in obj["egenskaper"]:
-            if "verdi" in prop:
-                properties[normalize(prop["navn"])] = prop["verdi"]
+            # https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekttyper/datatyper
+            if prop["navn"].startswith("Geom"):
+                continue
+            value = prop.get("verdi", None)
+            if value != None:
+                properties[normalize(prop["navn"])] = value
 
         return {
             "type": "Feature",
@@ -126,6 +131,8 @@ class VegObjekter(BaseProvider):
             response = requests.get(
                 urljoin(url, f"{self.obj_id}"), params=params
             ).json()
+            if "objekter" not in response:
+                logging.error(response)
             for obj in response["objekter"]:
                 features.append(self.obj2feature(obj))
             params["start"] = response["metadata"]["neste"]["start"]

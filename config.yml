@@ -1,5 +1,5 @@
 logging:
-  level: ERROR
+  level: DEBUG
 metadata:
   contact:
     city: Trondheim
@@ -4028,29 +4028,6 @@ resources:
       type: feature
     title: '[NVDB] Faunapassasje'
     type: collection
-  nvdb_faunapassages:
-    description: Fauna passages / Faunapassasje
-    extents:
-      spatial:
-        bbox:
-        - -180
-        - -90
-        - 180
-        - 90
-        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
-    keywords:
-    - NVDB
-    - Fauna passages
-    - Faunapassasje
-    links: []
-    providers:
-    - data: /dev/null
-      name: nvdb.vegobjekter.VegObjekter
-      options:
-        obj_id: 872
-      type: feature
-    title: NVDB - Fauna Passages
-    type: collection
   nvdb_feieRode:
     description: "Strekning som inng\xE5r i spesifikk rode for feiing/renhold.\nVegObjekter\
       \ ID: 884"
@@ -4073,29 +4050,6 @@ resources:
         obj_id: 884
       type: feature
     title: '[NVDB] Feierode'
-    type: collection
-  nvdb_fences:
-    description: Fences / Gjerde
-    extents:
-      spatial:
-        bbox:
-        - -180
-        - -90
-        - 180
-        - 90
-        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
-    keywords:
-    - NVDB
-    - Fences
-    - Gjerde
-    links: []
-    providers:
-    - data: /dev/null
-      name: nvdb.vegobjekter.VegObjekter
-      options:
-        obj_id: 7
-      type: feature
-    title: NVDB - Fences
     type: collection
   nvdb_ferjeLem:
     description: "Bru mellom ferje og kai. Kan heves/senkes. Benevnes ogs\xE5 ferjekaibru.\n\
@@ -8830,29 +8784,6 @@ resources:
       type: feature
     title: '[NVDB] Trafikkreguleringer'
     type: collection
-  nvdb_traffikvolume:
-    description: Traffik volume / TrafikMengde
-    extents:
-      spatial:
-        bbox:
-        - -180
-        - -90
-        - 180
-        - 90
-        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
-    keywords:
-    - NVDB
-    - Traffik
-    - TrafikMengde
-    links: []
-    providers:
-    - data: /dev/null
-      name: nvdb.vegobjekter.VegObjekter
-      options:
-        obj_id: 540
-      type: feature
-    title: NVDB - Traffik volume
-    type: collection
   nvdb_trdl:
     description: "Fysisk skille mellom trafikkstr\xF8mmer (1).\nVegObjekter ID: 172"
     extents:
@@ -9338,29 +9269,6 @@ resources:
       end: 2013-10-09
     title: '[NVDB] Tunnelport'
     type: collection
-  nvdb_tunnels:
-    description: "Tunnels / Tunnel\xF8p"
-    extents:
-      spatial:
-        bbox:
-        - -180
-        - -90
-        - 180
-        - 90
-        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
-    keywords:
-    - NVDB
-    - Tunnels
-    - "Tunnel\xF8p"
-    links: []
-    providers:
-    - data: /dev/null
-      name: nvdb.vegobjekter.VegObjekter
-      options:
-        obj_id: 67
-      type: feature
-    title: NVDB - Tunnels
-    type: collection
   nvdb_tupo:
     description: "Byggverk som benyttes i endene av fjelltunnelene for \xE5 beskytte\
       \ tunnel\xE5pning mot rennende vann og fallende sn\xF8, is stein og jord. (HB\
@@ -9459,29 +9367,6 @@ resources:
     temporal:
       end: 2021-10-14
     title: '[NVDB] Undergang'
-    type: collection
-  nvdb_underpassages:
-    description: Underpassages / Undergang
-    extents:
-      spatial:
-        bbox:
-        - -180
-        - -90
-        - 180
-        - 90
-        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
-    keywords:
-    - NVDB
-    - Underpassages
-    - Undergang
-    links: []
-    providers:
-    - data: /dev/null
-      name: nvdb.vegobjekter.VegObjekter
-      options:
-        obj_id: 452
-      type: feature
-    title: NVDB - Underpassages
     type: collection
   nvdb_ungr:
     description: "Angir hvilken undergrunn vegen hviler p\xE5.\nVegObjekter ID: 303"
