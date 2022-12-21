@@ -1,4 +1,5 @@
 import logging
+import os
 from urllib.parse import urljoin
 
 import requests
@@ -9,7 +10,9 @@ from pygeoapi.provider.base import BaseProvider
 
 from . import URL
 
-db = walrus.Database()
+db = walrus.Database(
+    host=os.getenv("REDIS_HOST", "localhost"), port=int(os.getenv("REDIS_PORT", 6379))
+)
 cache = db.cache()
 
 url = urljoin(URL, "/vegobjekter/")
