@@ -22,3 +22,12 @@ build-backend = "pdm.pep517.api"
 
 [tool]
 [tool.pdm]
+
+[tool.black]
+
+[tool.isort]
+# https://pycqa.github.io/isort/docs/configuration/black_compatibility.html
+profile = "black"
+
+[tool.ruff]
+fix = true

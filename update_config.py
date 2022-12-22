@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 
-import datetime
 import os
-import tempfile
 from urllib.parse import urljoin
 
 import hydra
 import requests
-import yaml
 from omegaconf import OmegaConf, open_dict
 
 from nvdb import URL

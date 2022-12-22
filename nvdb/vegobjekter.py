@@ -70,7 +70,7 @@ class VegObjekter(BaseProvider):
             if prop["navn"].startswith("Geom"):
                 continue
             value = prop.get("verdi", None)
-            if value != None:
+            if value is not None:
                 properties[normalize(prop["navn"])] = value
 
         return {
