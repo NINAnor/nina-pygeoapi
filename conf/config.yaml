@@ -38,7 +38,7 @@ server:
   gzip: false
   languages:
   - en-US
-  limit: 300
+  limit: 100
   map:
     attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap
       contributors</a>'

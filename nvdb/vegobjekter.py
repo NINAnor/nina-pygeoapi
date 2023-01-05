@@ -14,6 +14,7 @@ db = walrus.Database(
     host=os.getenv("REDIS_HOST", "localhost"), port=int(os.getenv("REDIS_PORT", 6379))
 )
 cache = db.cache()
+# cache invalidation by checking /transaksjon?
 
 url = urljoin(URL, "/vegobjekter/")
 
@@ -45,7 +46,7 @@ def normalize(value):
 class VegObjekter(BaseProvider):
     def __init__(self, provider_def):
         super().__init__(provider_def)
-        self.max_items = 300  # 300 seems to be the maximum number of items per page
+        self.max_items = 100  # maximum number of items per page
         self.obj_id = self.options["obj_id"]
 
     def fix_geometry(self, y, x, z=None):
