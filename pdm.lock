@@ -114,6 +114,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "gunicorn"
+version = "20.1.0"
+requires_python = ">=3.5"
+summary = "WSGI HTTP Server for UNIX"
+dependencies = [
+    "setuptools>=3.0",
+]
+
+[[package]]
 name = "hydra-core"
 version = "1.3.1"
 summary = "A framework for elegantly configuring complex applications"
@@ -458,7 +467,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:ba9a5da0f9cb12998b93f8e6ef491aad63df5fd5ec5844de56f4cb318c3d6163"
+content_hash = "sha256:4edaf6fe47f7cb1c399f2118a848c4a66dec000f601caa0402288801c9c0049f"
 
 [metadata.files]
 "affine 2.3.1" = [
@@ -533,6 +542,10 @@ content_hash = "sha256:ba9a5da0f9cb12998b93f8e6ef491aad63df5fd5ec5844de56f4cb318
 "future-annotations 1.0.0" = [
     {url = "https://files.pythonhosted.org/packages/2a/a6/95dd5f6dd2a785d69fa2fd2c7c217c13a6eb9c1f37eddc232eb11bfd8fa7/future_annotations-1.0.0-py2.py3-none-any.whl", hash = "sha256:a38cc5d9602181a7eb04550d34644508a63e5550c82c4b45b28b86923be203d2"},
     {url = "https://files.pythonhosted.org/packages/45/3a/168feb6471a3142b1a501947e2f45afbbe9753e44f9d05317553ad7c04c0/future_annotations-1.0.0.tar.gz", hash = "sha256:c707d19f7c74e08d9e67b310fd6a7438ff510ba5cbfb7334695627f8f69c6378"},
+]
+"gunicorn 20.1.0" = [
+    {url = "https://files.pythonhosted.org/packages/28/5b/0d1f0296485a6af03366604142ea8f19f0833894db3512a40ed07b2a56dd/gunicorn-20.1.0.tar.gz", hash = "sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8"},
+    {url = "https://files.pythonhosted.org/packages/e4/dd/5b190393e6066286773a67dfcc2f9492058e9b57c4867a95f1ba5caf0a83/gunicorn-20.1.0-py3-none-any.whl", hash = "sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e"},
 ]
 "hydra-core 1.3.1" = [
     {url = "https://files.pythonhosted.org/packages/01/d1/d2e852afd72da2ca7f5ee1e71124ef61328282482b1cd8d96d37145bb947/hydra_core-1.3.1-py3-none-any.whl", hash = "sha256:d1c8b273eba0be68218c4ff1ae9a7df7430ce4aa580f1bbebc03297029761cf4"},
