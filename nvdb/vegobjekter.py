@@ -8,7 +8,7 @@ import shapely.wkt
 import walrus
 from pygeoapi.provider.base import BaseProvider
 
-from . import URL
+import nvdb
 
 db = walrus.Database(
     host=os.getenv("REDIS_HOST", "localhost"), port=int(os.getenv("REDIS_PORT", 6379))
@@ -16,31 +16,7 @@ db = walrus.Database(
 cache = db.cache()
 # cache invalidation by checking /transaksjon?
 
-url = urljoin(URL, "/vegobjekter/")
-
-mapping = str.maketrans(
-    {
-        "æ": "ae",
-        "ø": "oe",
-        "å": "aa",
-    }
-)
-
-
-def normalize(value):
-    """Change column names to [a-z][a-z0-9_]*
-
-    - General rule: make the string lowercase
-    - GRASS requires [A-Za-z][A-Za-z0-9_]*
-      https://github.com/OSGeo/grass/blob/889ed601c30bb609d73eb11a0bb3f985cff3b57d/vector/v.in.ogr/main.c#L1067
-    """
-    value = value.lower()
-    value = value.translate(mapping)
-    value = value.replace(" ", "_")
-    value = "".join(v for v in value if v in "0123456789abcdefghijklmnopqrstuvwxyz")
-    if value[0] in "0123456789":
-        value = "_" + value
-    return value
+url = urljoin(nvdb.URL, "/vegobjekter/")
 
 
 class VegObjekter(BaseProvider):
@@ -72,7 +48,7 @@ class VegObjekter(BaseProvider):
                 continue
             value = prop.get("verdi", None)
             if value is not None:
-                properties[normalize(prop["navn"])] = value
+                properties[nvdb.normalize(prop["navn"])] = value
 
         return {
             "type": "Feature",

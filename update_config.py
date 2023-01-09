@@ -7,7 +7,7 @@ import hydra
 import requests
 from omegaconf import OmegaConf, open_dict
 
-from nvdb import URL
+import nvdb
 
 
 @hydra.main(version_base=None, config_path="conf", config_name="config")
@@ -16,7 +16,7 @@ def main(cfg):
 
     OmegaConf.set_struct(cfg, True)
     with open_dict(cfg):
-        object_types = requests.get(urljoin(URL, "/vegobjekttyper")).json()
+        object_types = requests.get(urljoin(nvdb.URL, "/vegobjekttyper")).json()
         for object_type in object_types:
             resource = {
                 "type": "collection",
@@ -45,7 +45,8 @@ def main(cfg):
             temporal_end = object_type.get("objektliste_dato")
             if temporal_end:
                 resource["temporal"] = {"end": temporal_end}
-            cfg["resources"][f"nvdb/{object_type['kortnavn']}"] = resource
+            layer_name = nvdb.normalize("nvdb_" + object_type["kortnavn"])
+            cfg["resources"][layer_name] = resource
 
     with open(pygeoapi_config, "w") as config_file:
         config_file.write(OmegaConf.to_yaml(cfg))
