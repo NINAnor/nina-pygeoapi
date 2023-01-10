@@ -17,6 +17,7 @@ cache = db.cache()
 # cache invalidation by checking /transaksjon?
 
 url = urljoin(nvdb.URL, "/vegobjekter/")
+url_typer = urljoin(nvdb.URL, "/vegobjekttyper/")
 
 
 class VegObjekter(BaseProvider):
@@ -34,6 +35,19 @@ class VegObjekter(BaseProvider):
     def wkt2geom(self, wkt):
         return shapely.ops.transform(self.fix_geometry, shapely.wkt.loads(wkt))
 
+    @cache.cached(timeout=60 * 60)
+    def get_columns(self):
+        typer = requests.get(
+            urljoin(url_typer, str(self.obj_id)), params={"inkluder": "egenskapstyper"}
+        ).json()
+        # https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekttyper/datatyper
+        return [
+            item["navn"]
+            for item in typer["egenskapstyper"]
+            if not item["navn"].startswith("Geom")
+            and not item["navn"].startswith("Assosierte")
+        ]
+
     def obj2feature(self, obj):
         if "geometri" not in obj:
             # example: https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/452/301561867/1
@@ -42,13 +56,16 @@ class VegObjekter(BaseProvider):
         geometry = self.wkt2geom(obj["geometri"]["wkt"])
 
         properties = {}
-        for prop in obj["egenskaper"]:
-            # https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekttyper/datatyper
-            if prop["navn"].startswith("Geom"):
-                continue
-            value = prop.get("verdi", None)
-            if value is not None:
-                properties[nvdb.normalize(prop["navn"])] = value
+        print(self.get_columns())
+        for column in self.get_columns():
+            name = nvdb.normalize(column)
+            for prop in obj["egenskaper"]:
+                if prop["navn"] == column:
+                    value = prop.get("verdi", "")
+                    break
+            else:
+                value = None
+            properties[name] = value
 
         return {
             "type": "Feature",
