@@ -1,20 +1,12 @@
 import logging
-import os
 from urllib.parse import urljoin
 
 import requests
 import shapely.ops
 import shapely.wkt
-import walrus
 from pygeoapi.provider.base import BaseProvider
 
 import nvdb
-
-db = walrus.Database(
-    host=os.getenv("REDIS_HOST", "localhost"), port=int(os.getenv("REDIS_PORT", 6379))
-)
-cache = db.cache()
-# cache invalidation by checking /transaksjon?
 
 url = urljoin(nvdb.URL, "/vegobjekter/")
 url_typer = urljoin(nvdb.URL, "/vegobjekttyper/")
@@ -35,7 +27,6 @@ class VegObjekter(BaseProvider):
     def wkt2geom(self, wkt):
         return shapely.ops.transform(self.fix_geometry, shapely.wkt.loads(wkt))
 
-    @cache.cached(timeout=60 * 60)
     def get_columns(self):
         typer = requests.get(
             urljoin(url_typer, str(self.obj_id)), params={"inkluder": "egenskapstyper"}
@@ -80,13 +71,11 @@ class VegObjekter(BaseProvider):
         if stop % step > 0:
             yield stop % step
 
-    @cache.cached(timeout=60 * 60)
     def get_start(self, **params):
         return requests.get(urljoin(url, str(self.obj_id)), params=params).json()[
             "metadata"
         ]["neste"]["start"]
 
-    @cache.cached(timeout=60 * 60)
     def query(
         self,
         offset=0,
