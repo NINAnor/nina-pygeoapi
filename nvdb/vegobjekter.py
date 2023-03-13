@@ -56,7 +56,6 @@ class VegObjekter(BaseProvider):
         geometry = self.wkt2geom(obj["geometri"]["wkt"])
 
         properties = {}
-        print(self.get_columns())
         for column in self.get_columns():
             name = nvdb.normalize(column)
             for prop in obj["egenskaper"]:
