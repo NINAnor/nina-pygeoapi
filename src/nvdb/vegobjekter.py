@@ -99,7 +99,6 @@ class VegObjekter(BaseProvider):
         skip_geometry=False,
         **kwargs,
     ):
-
         params = {
             "srid": 4326,
             "inkluder": "alle",
