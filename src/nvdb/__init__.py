@@ -1,3 +1,5 @@
+import os
+
 URL = "https://nvdbapiles-v3.atlas.vegvesen.no/"
 
 mapping = str.maketrans(
@@ -24,3 +26,11 @@ def normalize(value):
     if value[0] in "0123456789":
         value = "_" + value
     return value
+
+
+if os.getenv('SENTRY_DSN'):
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_DSN'),
+    )
+    print('sentry ready')
