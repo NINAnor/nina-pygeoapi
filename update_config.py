@@ -18,6 +18,8 @@ def main(cfg):
     with open_dict(cfg):
         object_types = requests.get(urljoin(nvdb.URL, "/vegobjekttyper")).json()
         for object_type in object_types:
+            if object_type["sensitiv"]:
+                continue
             resource = {
                 "type": "collection",
                 "title": f"[NVDB] {object_type['navn']}",
