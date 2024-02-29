@@ -18,8 +18,15 @@ def main(cfg):
     with open_dict(cfg):
         object_types = requests.get(urljoin(nvdb.URL, "/vegobjekttyper")).json()
         for object_type in object_types:
+            # https://nvdb.atlas.vegvesen.no/docs/data-i-nvdb/data-vi-ikke-publiserer/
+            if object_type["id"] >= 1000:
+                continue  # internal object
             if object_type["sensitiv"]:
-                continue
+                continue  # authentication required
+            if object_type["id"] == 562:
+                continue  # test object
+            if object_type["id"] == 793:
+                continue  # documentation
             resource = {
                 "type": "collection",
                 "title": f"[NVDB] {object_type['navn']}",
