@@ -125,9 +125,11 @@ class VegObjekter(BaseProvider):
             params["antall"] = antall
             response = requests.get(
                 urljoin(url, f"{self.obj_id}"), params=params
-            ).json()
+            )
+            response.raise_for_status()
+            response = response.json()
             if "objekter" not in response:
-                logging.error(response)
+                raise Exception("does not contain 'objekter', please check this endpoint")
             for obj in response["objekter"]:
                 features.append(self.obj2feature(obj))
             params["start"] = response["metadata"]["neste"]["start"]
