@@ -111,7 +111,7 @@ rpds-py==0.18.0
     # via
     #   jsonschema
     #   referencing
-setuptools==69.1.1
+setuptools==70.0.0
     # via rasterio
 shapely==1.8.5.post1
     # via pygeoapi
