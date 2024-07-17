@@ -1,7 +1,9 @@
 import os
+import string
 
 URL = "https://nvdbapiles-v3.atlas.vegvesen.no/"
 
+allowed_chars = "_" + string.digits + string.ascii_lowercase
 mapping = str.maketrans(
     {
         "æ": "ae",
@@ -22,15 +24,16 @@ def normalize(value):
     value = value.lower()
     value = value.translate(mapping)
     value = value.replace(" ", "_")
-    value = "".join(v for v in value if v in "_0123456789abcdefghijklmnopqrstuvwxyz")
+    value = "".join(v for v in value if v in allowed_chars)
     if value[0] in "0123456789":
         value = "_" + value
     return value
 
 
-if os.getenv('SENTRY_DSN'):
+if os.getenv("SENTRY_DSN"):
     import sentry_sdk
+
     sentry_sdk.init(
-        dsn=os.getenv('SENTRY_DSN'),
+        dsn=os.getenv("SENTRY_DSN"),
     )
-    print('sentry ready')
+    print("sentry ready")

@@ -1,0 +1,14 @@
+# Changes here will be overwritten by Copier
+_commit: v0.0.1
+_src_path: gh:ninanor/python-template
+author_name: Francesco Frassinelli
+debug: false
+default_branch_name: main
+docker: true
+email: francesco.frassinelli@nina.no
+project_name: NINA pygeoapi
+project_slug: nina-pygeoapi
+repo_name: nina-pygeoapi
+repo_org: ninanor
+template_type: python
+type_annotations: false

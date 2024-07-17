@@ -1,4 +1,3 @@
-import logging
 import os
 from urllib.parse import urljoin
 
@@ -38,7 +37,9 @@ class VegObjekter(BaseProvider):
     @cache.cached(timeout=60 * 60)
     def get_columns(self):
         typer = requests.get(
-            urljoin(url_typer, str(self.obj_id)), params={"inkluder": "egenskapstyper"}
+            urljoin(url_typer, str(self.obj_id)),
+            params={"inkluder": "egenskapstyper"},
+            timeout=10,
         ).json()
         # https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekttyper/datatyper
         return [
@@ -81,9 +82,9 @@ class VegObjekter(BaseProvider):
 
     @cache.cached(timeout=60 * 60)
     def get_start(self, **params):
-        return requests.get(urljoin(url, str(self.obj_id)), params=params).json()[
-            "metadata"
-        ]["neste"]["start"]
+        return requests.get(
+            urljoin(url, str(self.obj_id)), params=params, timeout=10
+        ).json()["metadata"]["neste"]["start"]
 
     @cache.cached(timeout=60 * 60)
     def query(
@@ -91,14 +92,22 @@ class VegObjekter(BaseProvider):
         offset=0,
         limit=10,
         resulttype="results",
-        bbox=[],
+        bbox=None,
         datetime_=None,
-        properties=[],
-        sortby=[],
-        select_properties=[],
+        properties=None,
+        sortby=None,
+        select_properties=None,
         skip_geometry=False,
         **kwargs,
     ):
+        if select_properties is None:
+            select_properties = []
+        if sortby is None:
+            sortby = []
+        if properties is None:
+            properties = []
+        if bbox is None:
+            bbox = []
         params = {
             "srid": 4326,
             "inkluder": "alle",
@@ -124,12 +133,14 @@ class VegObjekter(BaseProvider):
         for antall in self.quick_pagination(limit, self.max_items):
             params["antall"] = antall
             response = requests.get(
-                urljoin(url, f"{self.obj_id}"), params=params
+                urljoin(url, f"{self.obj_id}"), params=params, timeout=10
             )
             response.raise_for_status()
             response = response.json()
             if "objekter" not in response:
-                raise Exception("does not contain 'objekter', please check this endpoint")
+                raise Exception(
+                    "does not contain 'objekter', please check this endpoint"
+                )
             for obj in response["objekter"]:
                 features.append(self.obj2feature(obj))
             params["start"] = response["metadata"]["neste"]["start"]
@@ -147,6 +158,7 @@ class VegObjekter(BaseProvider):
         obj = requests.get(
             urljoin(url, f"{self.obj_id}/{identifier}"),
             params=params,
+            timeout=10,
         ).json()
         return self.obj2feature(obj)
 

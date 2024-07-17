@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
 
 import os
+from pathlib import Path
 from urllib.parse import urljoin
 
 import hydra
+import nvdb
 import requests
 from omegaconf import OmegaConf, open_dict
-
-import nvdb
 
 
 @hydra.main(version_base=None, config_path="conf", config_name="config")
 def main(cfg):
-    pygeoapi_config = os.environ["PYGEOAPI_CONFIG"]
+    pygeoapi_config = Path(os.environ["PYGEOAPI_CONFIG"])
 
     OmegaConf.set_struct(cfg, True)
     with open_dict(cfg):
-        object_types = requests.get(urljoin(nvdb.URL, "/vegobjekttyper")).json()
+        object_types = requests.get(
+            urljoin(nvdb.URL, "/vegobjekttyper"), timeout=10
+        ).json()
         for object_type in object_types:
             # https://nvdb.atlas.vegvesen.no/docs/data-i-nvdb/data-vi-ikke-publiserer/
             if object_type["id"] >= 1000:
@@ -57,7 +59,7 @@ def main(cfg):
             layer_name = nvdb.normalize("nvdb_" + object_type["kortnavn"])
             cfg["resources"][layer_name] = resource
 
-    with open(pygeoapi_config, "w") as config_file:
+    with pygeoapi_config.open("w") as config_file:
         config_file.write(OmegaConf.to_yaml(cfg))
 
 
