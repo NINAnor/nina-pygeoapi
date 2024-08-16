@@ -116,6 +116,12 @@ class VegObjekter(BaseProvider):
         if bbox:
             params["kartutsnitt"] = ",".join(map(str, bbox))
 
+        if datetime_:
+            if ".." in datetime_:
+                raise Exception("does not support interval")
+            else:
+                params["tidspunkt"] = datetime_
+
         if offset > 0:
             pagination_params = params.copy()
             pagination_params.update(
