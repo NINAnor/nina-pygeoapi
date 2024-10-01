@@ -1,6 +1,7 @@
 import os
 from urllib.parse import urljoin
 
+import backoff
 import requests
 import shapely.ops
 import shapely.wkt
@@ -87,6 +88,9 @@ class VegObjekter(BaseProvider):
         ).json()["metadata"]["neste"]["start"]
 
     @cache.cached(timeout=60 * 60)
+    @backoff.on_exception(
+        backoff.expo, requests.exceptions.RequestException, max_time=60
+    )
     def query(
         self,
         offset=0,
