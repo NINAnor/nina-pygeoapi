@@ -1,4 +1,6 @@
-# Usage
+# NINA PygeoAPI
+
+## Usage
 
 ```bash
 echo "URL=http://localhost:5000/" > .env
