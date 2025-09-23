@@ -1,7 +1,7 @@
 import os
 import string
 
-URL = "https://nvdbapiles-v3.atlas.vegvesen.no/"
+URL = "https://nvdbapiles.atlas.vegvesen.no/"
 
 allowed_chars = "_" + string.digits + string.ascii_lowercase
 mapping = str.maketrans(
