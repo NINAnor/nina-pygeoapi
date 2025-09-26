@@ -15,8 +15,8 @@ metadata:
       en: NINA catalog for NVDB data
     keywords:
       en:
-      - NINA
-      - NVDB
+        - NINA
+        - NVDB
     terms_of_service: https://nvdbapiles-v3.atlas.vegvesen.no/dokumentasjon/
     title:
       en: NINA catalog for NVDB data
@@ -35,11 +35,18 @@ server:
   encoding: utf-8
   gzip: false
   languages:
-  - en-US
-  limit: 100
+    - en-US
+  limits:
+    default_items: 50
+    max_items: 1000
+    max_distance_x: 25
+    max_distance_y: 25
+    max_distance_units: m
+    on_exceed: throttle
+
   map:
-    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap
-      contributors</a>'
+    attribution: |
+      &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>
     url: https://tile.openstreetmap.org/{z}/{x}/{y}.png
   mimetype: application/json; charset=UTF-8
   pretty_print: true
