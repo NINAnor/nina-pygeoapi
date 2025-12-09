@@ -1,4 +1,6 @@
-# NINA PygeoAPI
+# NINA PygeoAPI NVDB
+
+A service to provide access to the NVDB APIs using the OGR REST Features protocol.
 
 ## Usage
 
